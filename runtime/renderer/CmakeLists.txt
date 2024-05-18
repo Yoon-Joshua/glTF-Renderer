@@ -1,0 +1,8 @@
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_LIB_SRCS 变量
+file(GLOB_RECURSE SRCS "*.cpp")
+
+# 生成链接库
+add_library (renderer ${SRCS})
+#target_link_libraries(renderer libktx.a libktx_read.a)
+#target_link_libraries(renderer libastcenc-sse2-static.a libastcenc-sse4.1-static.a)

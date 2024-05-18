@@ -1,0 +1,7 @@
+{
+    "macro":[
+        "APPLY_POINT_LIGHT",
+        "APPLY_SPOT_LIGHT",
+        "APPLY_DIRECTIONAL_LIGHT"
+    ]
+}

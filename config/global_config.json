@@ -1,0 +1,19 @@
+{
+    "mode": "fullwindow",
+    "scene": "Sponza/Sponza.gltf",
+    "camera": {
+        "translation": [
+            0,
+            0,
+            0.5
+        ],
+        "rotation": [
+            0.0,
+            90.0,
+            0.0
+        ]
+    },
+    "delta_time":0.01,
+    "ssao": false,
+    "skylight": false
+}

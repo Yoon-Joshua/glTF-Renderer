@@ -1,0 +1,25 @@
+@startuml ownship
+class RenderFrame
+class RenderTarget
+class DescriptorPool
+class DescriptorSet
+class FencePool
+class SemaphorePool
+
+RenderFrame --> CommandPool
+RenderFrame --> RenderTarget
+RenderFrame --> DescriptorPool
+RenderFrame --> DescriptorSet
+RenderFrame --> FencePool
+RenderFrame --> SemaphorePool
+RenderFrame --> BufferPool
+BufferPool --> BufferBlock
+@enduml
+
+@startuml command_pool
+class CommandPool
+class CommandBuffer
+
+RenderFrame <.. CommandPool
+CommandPool --> CommandBuffer
+@enduml
