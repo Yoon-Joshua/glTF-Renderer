@@ -1,0 +1,9 @@
+{
+    "all": [
+        "light_type"
+    ],
+    "light_type": {
+        "macros": [],
+        "type": 0
+    }
+}

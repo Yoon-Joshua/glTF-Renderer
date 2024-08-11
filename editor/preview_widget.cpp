@@ -25,7 +25,7 @@ void PreviewWidget::show() {
                                 .get_extent();
 
   ImGui::Image((ImTextureID)ds, ImVec2(extent.width, extent.height));
-  ImGui::SetWindowSize(ImVec2{extent.width, extent.height});
+  //ImGui::SetWindowSize(ImVec2{extent.width, extent.height});
   ImGui::End();
 }
 

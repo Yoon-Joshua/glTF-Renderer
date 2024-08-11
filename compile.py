@@ -210,56 +210,6 @@ def shift_resource(res_file):
     f.write(json_str)
     f.close()
 
-def compile_all(source,attribute,binding):
-
-    attribute_count = len(attribute)
-    binding_count = len(binding)
-
-    bin_dir=source+".bin"
-    if not os.path.exists(bin_dir):
-        os.mkdir(bin_dir)
-    
-    res_dir=source+".res"
-    if not os.path.exists(res_dir):
-        os.mkdir(res_dir)
-
-    for i in range(pow(2,attribute_count)):
-        for j in range(pow(2,binding_count)):
-            attribute_defined=bin(i)[2:].rjust(32,'0')
-            attribute_defined=attribute_defined[::-1]
-            binding_defined=bin(j)[2:].rjust(32,'0')
-            binding_defined=binding_defined[::-1]
-
-            # 生成spirv文件
-            output=os.path.join(bin_dir,str(i)+"."+str(j)+".spv")
-            cmd=["glslang","-V", source ,"-o",output]
-            for ii in range(len(attribute_defined)):
-                if ii>attribute_count:
-                    break
-                if attribute_defined[ii]=='1':
-                    cmd.append("-D"+attribute[ii])
-
-            for ii in range(len(binding_defined)):
-                if ii>binding_count:
-                    break
-                if binding_defined[ii]=='1':
-                    cmd.append("-D"+binding[ii])
-            
-            cmd_str=""
-            for word in cmd:
-                cmd_str=cmd_str+word+" "
-            cmd_str+=" "
-            print(cmd_str)
-            run_exe_command(cmd)
-            
-            # 生成包含资源信息的json文件
-            resource=os.path.join(res_dir,str(i)+"."+str(j)+".json")
-            cmd=["spirv-cross",output,"--reflect","--output",resource]
-            run_exe_command(cmd)
-
-            #将包含资源信息的json文件转换为cpp程序需要的格式
-            shift_resource(resource)
-
 def backtrace(i,macros,types,result,cur):
     if i>=len(macros):
         result.append(copy.copy(cur))
@@ -275,7 +225,7 @@ def backtrace(i,macros,types,result,cur):
             backtrace(i+1,macros,types,result,cur)
             cur.pop()
 
-def compile_all_2(source_path):
+def compile_all(source_path):
     source_path=os.path.abspath(source_path)
     json_file=os.path.splitext(source_path)[0]+'.macro.json'
     f=open(json_file,encoding='utf8',mode='r')
@@ -336,7 +286,7 @@ def compile_all_2(source_path):
 
 
 if __name__=='__main__':
-    compile_all_2('shaders/old_deferred/lighting.frag')
+    compile_all('shaders/deferred/lighting.frag')
 
     # config_file="config/shader.json"
     # f=open(config_file,mode='r',encoding='utf8')
@@ -347,13 +297,4 @@ if __name__=='__main__':
     # binding = data["binding_macro"]
 
     # source=os.path.abspath("shaders/deferred/geometry.vert")
-    # compile_all(source,attribute,binding)
-
-    # source=os.path.abspath("shaders/deferred/geometry.frag")
-    # compile_all(source,attribute,binding)
-
-    # source=os.path.abspath("shaders/deferred/lighting.vert")
-    # compile_all(source,attribute,binding)
-
-    # source=os.path.abspath("shaders/deferred/lighting.frag")
     # compile_all(source,attribute,binding)

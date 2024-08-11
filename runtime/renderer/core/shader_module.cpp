@@ -7,6 +7,8 @@
 #include "runtime/platform/filesystem.h"
 #include "runtime/renderer/common/strings.h"
 
+#include "spdlog/fmt/fmt.h"
+
 using json = nlohmann::json;
 
 extern struct ShaderMacroConfig shader_macro_config;
@@ -254,11 +256,10 @@ ShaderModule::ShaderModule(Device &device, VkShaderStageFlagBits stage,
                            const std::string &entry_point,
                            const ShaderVariant &shader_variant)
     : device{device}, stage{stage}, entry_point{entry_point} {
-#ifndef TEMP
   debug_name = fmt::format("{} [variant {:X}] [entrypoint {}]",
                            glsl_source.get_filename(), shader_variant.get_id(),
                            entry_point);
-
+#ifndef TEMP
   // Compiling from GLSL source requires the entry point
   if (entry_point.empty()) {
     throw VulkanException{VK_ERROR_INITIALIZATION_FAILED};

@@ -54,8 +54,6 @@ class Renderer : public Application {
   /// @brief Holds all scene information
   std::unique_ptr<sg::Scene> scene{nullptr};
 
-  // std::unique_ptr<sg::Scene> test_triangle{nullptr};
-
   std::unique_ptr<vkb::Stats> stats{nullptr};
 
   /// @brief Update scene
@@ -120,12 +118,9 @@ class Renderer : public Application {
   /********************************* XR.Y *********************************/
  public:
   void load_assets(std::string);
-
+  
+  /// @brief Deferred Pass
   void create_rendering_pipeline();
-
-  /// @brief Draws using the good pipeline: one render pass with two subpasses
-  void draw_subpasses(vkb::CommandBuffer &command_buffer,
-                      vkb::RenderTarget &render_target);
 
   sg::PerspectiveCamera *camera{};
 

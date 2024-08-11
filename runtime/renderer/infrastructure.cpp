@@ -40,7 +40,7 @@ bool Infrastructure::prepare() {
 
     for (const auto& it : available_instance_extensions) {
       if (strcmp(it.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME) == 0) {
-        LOGI("Vulkan debug utils enabled (%s)",
+        LOGI("Vulkan debug utils enabled ({})",
              VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
         //debug_utils = std::make_unique<vkb::DebugUtilsExtDebugUtils>();

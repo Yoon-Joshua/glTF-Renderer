@@ -3,4 +3,4 @@
 file(GLOB_RECURSE SRCS "*.cpp")
 
 # 生成链接库
-add_library (editor STATIC ${SRCS})
+add_library (editor ${SRCS})

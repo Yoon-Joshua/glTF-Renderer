@@ -39,8 +39,8 @@ inline VkExtent2D choose_extent(VkExtent2D request_extent,
 
   if (request_extent.width < 1 || request_extent.height < 1) {
     LOGW(
-        "(Swapchain) Image extent (%d, %d) not supported. Selecting (%d, "
-        "%d).\n",
+        "(Swapchain) Image extent ({}, {}) not supported. Selecting ({}, "
+        "{}).",
         request_extent.width, request_extent.height, current_extent.width,
         current_extent.height);
     return current_extent;
@@ -78,12 +78,12 @@ inline VkPresentModeKHR choose_present_mode(
       }
     }
 
-    /* LOGW("(Swapchain) Present mode '{}' not supported. Selecting '{}'.",
-         to_string(request_present_mode), to_string(chosen_present_mode)); */
+    LOGW("(Swapchain) Present mode '{}' not supported. Selecting '{}'.",
+         to_string(request_present_mode), to_string(chosen_present_mode));
     return chosen_present_mode;
   } else {
-    /* LOGI("(Swapchain) Present mode selected: {}",
-         to_string(request_present_mode)); */
+    LOGI("(Swapchain) Present mode selected: {}",
+         to_string(request_present_mode));
     return *present_mode_it;
   }
 }
@@ -117,17 +117,17 @@ inline VkSurfaceFormatKHR choose_surface_format(
             return false;
           });
       if (surface_format_it != available_surface_formats.end()) {
-        /* LOGW("(Swapchain) Surface format ({}) not supported. Selecting
-           ({}).", to_string(requested_surface_format),
-             to_string(*surface_format_it)); */
+        LOGW("(Swapchain) Surface format ({}) not supported. Selecting ({}).",
+             to_string(requested_surface_format),
+             to_string(*surface_format_it));
         return *surface_format_it;
       }
     }
 
     // If nothing found, default the first supporte surface format
     surface_format_it = available_surface_formats.begin();
-    /* LOGW("(Swapchain) Surface format ({}) not supported. Selecting ({}).",
-         to_string(requested_surface_format), to_string(*surface_format_it)); */
+    LOGW("(Swapchain) Surface format ({}) not supported. Selecting ({}).",
+         to_string(requested_surface_format), to_string(*surface_format_it));
   } else {
     /* LOGI("(Swapchain) Surface format selected: {}",
          to_string(requested_surface_format)); */
@@ -143,8 +143,8 @@ inline VkSurfaceTransformFlagBitsKHR choose_transform(
     return request_transform;
   }
 
-  /* LOGW("(Swapchain) Surface transform '{}' not supported. Selecting '{}'.",
-       to_string(request_transform), to_string(current_transform)); */
+  LOGW("(Swapchain) Surface transform '{}' not supported. Selecting '{}'.",
+       to_string(request_transform), to_string(current_transform));
 
   return current_transform;
 }
@@ -164,8 +164,8 @@ inline VkCompositeAlphaFlagBitsKHR choose_composite_alpha(
 
   for (VkCompositeAlphaFlagBitsKHR composite_alpha : composite_alpha_flags) {
     if (composite_alpha & supported_composite_alpha) {
-      /* LOGW("(Swapchain) Composite alpha '{}' not supported. Selecting '{}.",
-           to_string(request_composite_alpha), to_string(composite_alpha)); */
+      LOGW("(Swapchain) Composite alpha '{}' not supported. Selecting '{}.",
+           to_string(request_composite_alpha), to_string(composite_alpha));
       return composite_alpha;
     }
   }
@@ -219,7 +219,7 @@ inline std::set<VkImageUsageFlagBits> choose_image_usage(
     for (VkImageUsageFlagBits image_usage : validated_image_usage_flags) {
       /* usage_list += to_string(image_usage) + " "; */
     }
-    LOGI("(Swapchain) Image usage flags: %s\n", usage_list.c_str());
+    LOGI("(Swapchain) Image usage flags: {}", usage_list.c_str());
   } else {
     throw std::runtime_error("No compatible image usage found.");
   }
@@ -305,10 +305,10 @@ Swapchain::Swapchain(
       this->device.get_gpu().get_handle(), surface, &surface_format_count,
       surface_formats.data()));
 
-  LOGI("Surface supports the following surface formats:\n");
-  //   for (auto &surface_format : surface_formats) {
-  //     LOGI("  \t{}", to_string(surface_format));
-  //   }
+  LOGI("Surface supports the following surface formats:");
+  for (auto& surface_format : surface_formats) {
+    LOGI("  \t{}", to_string(surface_format));
+  }
 
   uint32_t present_mode_count{0U};
   VK_CHECK(vkGetPhysicalDeviceSurfacePresentModesKHR(
@@ -319,10 +319,10 @@ Swapchain::Swapchain(
       this->device.get_gpu().get_handle(), surface, &present_mode_count,
       present_modes.data()));
 
-  LOGI("Surface supports the following present modes:\n");
-  /* for (auto &present_mode : present_modes) {
+  LOGI("Surface supports the following present modes:");
+  for (auto& present_mode : present_modes) {
     LOGI("  \t{}", to_string(present_mode));
-  } */
+  }
 
   // Chose best properties based on surface capabilities
   properties.image_count =

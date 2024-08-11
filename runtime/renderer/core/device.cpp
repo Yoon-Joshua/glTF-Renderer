@@ -23,7 +23,7 @@ Device::Device(PhysicalDevice& gpu, VkSurfaceKHR surface,
       debug_utils{std::move(debug_utils)},
       gpu{gpu},
       resource_cache{*this} {
-  LOGI("Selected GPU: %s\n", gpu.get_properties().deviceName);
+  LOGI("Selected GPU: {}", gpu.get_properties().deviceName);
 
   // Prepare the device queues
   uint32_t queue_family_properties_count =
@@ -95,7 +95,7 @@ Device::Device(PhysicalDevice& gpu, VkSurfaceKHR surface,
     enabled_extensions.push_back("VK_KHR_get_memory_requirements2");
     enabled_extensions.push_back("VK_KHR_dedicated_allocation");
 
-    LOGI("Dedicated Allocation enabled\n");
+    LOGI("Dedicated Allocation enabled");
   }
 
   // For performance queries, we also use host query reset since queryPool
@@ -128,9 +128,9 @@ Device::Device(PhysicalDevice& gpu, VkSurfaceKHR surface,
   }
 
   if (enabled_extensions.size() > 0) {
-    LOGI("Device supports the following requested extensions:\n");
+    LOGI("Device supports the following requested extensions:");
     for (auto& extension : enabled_extensions) {
-      LOGI("  \t%s\n", extension);
+      LOGI("  \t{}", extension);
     }
   }
 
@@ -258,8 +258,7 @@ Device::~Device() {
   if (memory_allocator != VK_NULL_HANDLE) {
     VmaTotalStatistics stats;
     vmaCalculateStatistics(memory_allocator, &stats);
-    LOGI("Total device memory leak: %llu bytes.\n",
-         stats.total.allocationSizeMax);
+    LOGI("Total device memory leak: {} bytes.", stats.total.allocationSizeMax);
     vmaDestroyAllocator(memory_allocator);
   }
   if (handle != VK_NULL_HANDLE) {

@@ -9,3 +9,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/transform.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL 
+#include <glm/gtx/hash.hpp>

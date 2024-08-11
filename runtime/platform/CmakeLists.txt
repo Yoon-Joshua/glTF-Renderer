@@ -1,8 +1,0 @@
-set(TARGET platform)
-
-file(GLOB_RECURSE SRC "*.cpp")
-
-add_library (${TARGET} ${SRC})
-
-target_include_directories(${TARGET} PRIVATE E:/kits_mingw/include)
-#target_link_libraries(${TARGET} libglfw3dll.a)

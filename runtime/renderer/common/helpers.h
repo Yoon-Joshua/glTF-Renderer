@@ -6,8 +6,6 @@
 #include <cstdlib>
 #include <fstream>
 #include <functional>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
 #include <iterator>
 #include <map>
 #include <memory>

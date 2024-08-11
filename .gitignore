@@ -1,6 +1,3 @@
 .vscode/*
 build/*
 MSVC Test/*
-third_party/*
-assets/*
-shaders/*

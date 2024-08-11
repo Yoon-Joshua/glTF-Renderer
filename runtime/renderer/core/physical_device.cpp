@@ -10,7 +10,7 @@ namespace vkb {
         vkGetPhysicalDeviceProperties(physical_device, &properties);
         vkGetPhysicalDeviceMemoryProperties(physical_device, &memory_properties);
 
-        LOGI("Found GPU: %s\n", properties.deviceName);
+        LOGI("Found GPU: {}", properties.deviceName);
 
         uint32_t queue_family_properties_count = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(

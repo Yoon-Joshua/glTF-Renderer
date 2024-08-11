@@ -304,7 +304,22 @@ void Renderer::draw(vkb::CommandBuffer& command_buffer,
 
 void Renderer::draw_renderpass(vkb::CommandBuffer& command_buffer,
                                vkb::RenderTarget& render_target) {
-  draw_subpasses(command_buffer, render_target);
+  auto& extent = render_target.get_extent();
+
+  VkViewport viewport{};
+  viewport.width = static_cast<float>(extent.width);
+  viewport.height = static_cast<float>(extent.height);
+  viewport.minDepth = 0.0f;
+  viewport.maxDepth = 1.0f;
+  command_buffer.set_viewport(0, {viewport});
+
+  VkRect2D scissor{};
+  scissor.extent = extent;
+  command_buffer.set_scissor(0, {scissor});
+
+  render_pipeline->draw(command_buffer, render_target);
+
+  command_buffer.end_render_pass();
 }
 
 const std::unordered_map<const char*, bool> Renderer::get_device_extensions() {
@@ -356,7 +371,7 @@ void Renderer::load_assets(std::string path) {
   scene = loader.read_scene_from_file(path);
 
   if (!scene) {
-    LOGE("Cannot load scene: %s\n", path.c_str());
+    LOGE("Cannot load scene: {}", path.c_str());
     throw std::runtime_error("Cannot load scene: " + path);
   }
 }
@@ -384,9 +399,9 @@ void Renderer::create_rendering_pipeline() {
       global_config.camera_translation);
 
   vkb::ShaderSource geometry_vs =
-      vkb::ShaderSource{"old_deferred/geometry.vert"};
+      vkb::ShaderSource{"deferred/geometry.vert"};
   vkb::ShaderSource geometry_fs =
-      vkb::ShaderSource{"old_deferred/geometry.frag"};
+      vkb::ShaderSource{"deferred/geometry.frag"};
   auto scene_subpass = std::make_unique<vkb::GeometrySubpass>(
       get_render_context(), std::move(geometry_vs), std::move(geometry_fs),
       *scene, *camera);
@@ -395,8 +410,8 @@ void Renderer::create_rendering_pipeline() {
   scene_subpass->set_output_attachments({1, 2, 3, 4});
 
   // Lighting subpass
-  auto lighting_vs = vkb::ShaderSource{"old_deferred/lighting.vert"};
-  auto lighting_fs = vkb::ShaderSource{"old_deferred/lighting.frag"};
+  auto lighting_vs = vkb::ShaderSource{"deferred/lighting.vert"};
+  auto lighting_fs = vkb::ShaderSource{"deferred/lighting.frag"};
   auto lighting_subpass = std::make_unique<vkb::LightingSubpass>(
       get_render_context(), std::move(lighting_vs), std::move(lighting_fs),
       *camera, *scene);
@@ -415,32 +430,6 @@ void Renderer::create_rendering_pipeline() {
       vkb::gbuffer::get_clear_all_store_swapchain());
 
   render_pipeline->set_clear_value(vkb::gbuffer::get_clear_value());
-}
-
-void draw_pipeline(vkb::CommandBuffer& command_buffer,
-                   vkb::RenderTarget& render_target,
-                   vkb::RenderPipeline& render_pipeline) {
-  auto& extent = render_target.get_extent();
-
-  VkViewport viewport{};
-  viewport.width = static_cast<float>(extent.width);
-  viewport.height = static_cast<float>(extent.height);
-  viewport.minDepth = 0.0f;
-  viewport.maxDepth = 1.0f;
-  command_buffer.set_viewport(0, {viewport});
-
-  VkRect2D scissor{};
-  scissor.extent = extent;
-  command_buffer.set_scissor(0, {scissor});
-
-  render_pipeline.draw(command_buffer, render_target);
-
-  command_buffer.end_render_pass();
-}
-
-void Renderer::draw_subpasses(vkb::CommandBuffer& command_buffer,
-                              vkb::RenderTarget& render_target) {
-  draw_pipeline(command_buffer, render_target, *render_pipeline);
 }
 
 std::unique_ptr<vkb::RenderTarget> Renderer::create_render_target(

@@ -803,7 +803,7 @@ sg::Scene GLTFLoader::load_scene(int scene_index) {
       image_components.push_back(image_component_futures[image_index].get());
 #else
       auto fut = parse_image(model.images[image_index]);
-      LOGI("Loaded gltf image #%lld (%s)\n", image_index,
+      LOGI("Loaded gltf image #{} ({})", image_index,
            model.images[image_index].uri.c_str());
       image_components.push_back(std::move(fut));
 #endif
@@ -930,14 +930,10 @@ sg::Scene GLTFLoader::load_scene(int scene_index) {
     for (size_t i_primitive = 0; i_primitive < gltf_mesh.primitives.size();
          i_primitive++) {
       const auto &gltf_primitive = gltf_mesh.primitives[i_primitive];
-#ifndef TEMP
+
       auto submesh_name =
           fmt::format("'{}' mesh, primitive #{}", gltf_mesh.name, i_primitive);
-#else
-      std::string submesh_name = std::string("'") + gltf_mesh.name +
-                                 std::string("' mesh, primitive #{") +
-                                 std::to_string(i_primitive) + std::string("}");
-#endif
+
       auto submesh = std::make_unique<sg::SubMesh>(std::move(submesh_name));
 
       for (auto &attribute : gltf_primitive.attributes) {
@@ -957,11 +953,11 @@ sg::Scene GLTFLoader::load_scene(int scene_index) {
                             VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
                             VMA_MEMORY_USAGE_CPU_TO_GPU};
         buffer.update(vertex_data);
-#ifndef TEMP
+
         buffer.set_debug_name(
             fmt::format("'{}' mesh, primitive #{}: '{}' vertex buffer",
                         gltf_mesh.name, i_primitive, attrib_name));
-#endif
+
 
         submesh->vertex_buffers.insert(
             std::make_pair(attrib_name, std::move(buffer)));
@@ -1002,11 +998,10 @@ sg::Scene GLTFLoader::load_scene(int scene_index) {
         submesh->index_buffer = std::make_unique<core::Buffer>(
             device, index_data.size(), VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
             VMA_MEMORY_USAGE_GPU_TO_CPU);
-#ifndef TEMP
+
         submesh->index_buffer->set_debug_name(
             fmt::format("'{}' mesh, primitive #{}: index buffer",
                         gltf_mesh.name, i_primitive));
-#endif
 
         submesh->index_buffer->update(index_data);
       } else {

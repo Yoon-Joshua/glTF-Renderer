@@ -9,6 +9,7 @@ set(TARGET main)
 # 添加主项目目录
 include_directories(E:/projects/PanGu)
 
+
 # # KTX库
 # include_directories(F:/Projects/PanGu/third_party/ktx/include)
 # link_directories(F:/Projects/PanGu/third_party/ktx/lib)
@@ -45,9 +46,17 @@ include_directories(third_party/stb)
 # TINY_GLTF库
 include_directories(third_party/tiny_gltf)
 
+#spdlog库
+include_directories(third_party/spdlog/include)
+link_directories(third_party/spdlog/lib)
+#link_libraries(spdlog)
+
+# tiny obj loader 库
+include_directories(third_party/tinyobjloader)
 
 add_subdirectory(editor)
 add_subdirectory(runtime)
 
 add_executable(${TARGET} main.cpp ${IMGUI_SRC})
-target_link_libraries(${TARGET} runtime editor)
+
+target_link_libraries(${TARGET} PRIVATE editor runtime)

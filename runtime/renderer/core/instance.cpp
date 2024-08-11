@@ -115,14 +115,14 @@ namespace vkb {
                         // Extension is already enabled
                     }
                     else {
-                        LOGI("Extension %s found, enabling it\n", required_ext_name);
+                        LOGI("Extension {} found, enabling it", required_ext_name);
                         enabled_extensions.emplace_back(required_ext_name);
                     }
                     return true;
                 }
             }
 
-            LOGI("Extension %s not found\n", required_ext_name);
+            LOGI("Extension {} not found\n", required_ext_name);
             return false;
         }
     }
@@ -187,7 +187,7 @@ namespace vkb {
                 if (strcmp(available_extension.extensionName,
                     VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME) == 0) {
                     validation_features = true;
-                    LOGI("%s is available, enabling it\n",
+                    LOGI("{} is available, enabling it",
                         VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME);
                     enabled_extensions.push_back(VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME);
                 }
@@ -263,9 +263,9 @@ namespace vkb {
 
         if (validate_layers(requested_validation_layers,
             supported_validation_layers)) {
-            LOGI("Enabled Validation Layers:\n");
+            LOGI("Enabled Validation Layers:");
             for (const auto& layer : requested_validation_layers) {
-                LOGI("	\t%s\n", layer);
+                LOGI("	\t{}", layer);
             }
         }
         else {

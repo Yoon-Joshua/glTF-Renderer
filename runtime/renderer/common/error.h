@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdio>
 
+#include "runtime/renderer/common/strings.h"
 #include "runtime/renderer/common/logging.h"
 
 class VulkanException : public std::runtime_error {
